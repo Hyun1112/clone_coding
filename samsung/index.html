@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삼성디스플레이 뉴스룸</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {margin: 0; padding: 0; list-style: none;}
+        .screen_out {display: none;}
+        button, label {cursor: pointer;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Thin.woff') format('woff');font-weight: 100;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraLight.woff') format('woff');font-weight: 200;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');font-weight: 300;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');font-weight: 400;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff') format('woff');font-weight: 500;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');font-weight: 600;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');font-weight: 700;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');font-weight: 800;font-style: normal;}
+        @font-face {font-family: 'Pretendard';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');font-weight: 900;font-style: normal;}
+
+        body {font-family: 'Pretendard'; overflow-x: hidden;}
+
+        header {width: 100%; height: 100px; border-bottom: 1px solid #e4e4e4; display: flex; align-items: center; font-family: 'Pretendard'; justify-content: center; box-shadow: 0 0 8px rgba(0, 0, 0, .1); z-index: 100; background-color: #fff; position: fixed; margin: auto;}
+        header h1 a {width: 160px; height: 46px; text-indent: -999px; overflow: hidden; background: url(img/logo.svg) center no-repeat; position: absolute; left: 0; line-height: 100px; top: 50%; transform: translate(50%, -50%);}
+        header nav ul:nth-child(2) {display: flex; gap: 80px;}
+        header nav>ul>li a {text-decoration: none; color: #1d1d1d; font-size: 19px; font-weight: 600;}
+        header nav .sub_menu {display: none;}
+        header nav:hover li.sub_menu {display: block;}
+        header nav ul.sub_menu {width: fit-content; display: flex; flex-direction: column; position: absolute; top: 120px; gap: 10px;}
+        header nav li.sub_menu a {font-size: 16px; font-weight: 400;}
+        header nav li.sub_menu a:hover {font-weight: 700;}
+        /*뉴스룸구독*/
+        header div {display: flex; position: absolute; right: 0; align-items: center;}
+        header #subscribe_btn {width: 105px; height: 35px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 0; background: #263070; color: #fff; border-radius: 100px; font-family: 'Pretendard'; font-size: 13px; font-weight: 500; margin-right: 30px; transition: all 0.6s ease;}
+        header .text::after {content: "\f1d8"; font-family: "FontAwesome"; font-size: 12px; position: absolute; top: 60px; right: 22px; transition: all 0.6s ease;}
+        header .text {transition: all 0.8s ease;}
+        header #subscribe_btn:hover {background: #2228cf;}
+        header #subscribe_btn:hover span.text {transform: translate(0, -30px);}
+        header #subscribe_btn:hover .text::after {transform: translate(0, -30px);}
+        header form {display: none;}
+        /*소셜바로가기*/
+        header #sns {display: flex; gap: 10px;}
+        header #sns li a {width: 20px; height: 20px; text-indent: -999px; overflow: hidden; display: block; background: url(img/fb_b.svg) center; transition: all .3s;}
+        header #sns li:nth-child(2) a {background-image: url(img/yt_b.svg);}
+        header #sns li:nth-child(3) a {background-image: url(img/insta_b.svg);}
+        header #sns li:nth-child(4) a {background-image: url(img/lang_b.svg);}
+        header #sns li:nth-child(1):hover a{background-image: url(img/fb_g.svg);}
+        header #sns li:nth-child(2):hover a{background-image: url(img/yt_g.svg);}header #sns li:nth-child(3):hover a{background-image: url(img/insta_g.svg);}header #sns li:nth-child(4):hover a{background-image: url(img/lang_g.svg);}
+        /*검색버튼*/
+        header #open_search {width: 40px; height: 40px; text-indent: -999px; overflow: hidden; background: url(img/search.svg) center / cover no-repeat; border: none; border-radius: 50%; margin: 0 52px 0 15px; transition: all 0.4s ease;}
+        header #close_search {display: none;}
+        header #open_search:hover {box-shadow: 0 2px 2px rgba(0, 0, 0, .2); }
+
+        main {display: flex; flex-direction: column; align-items: center; padding-top: 100px;}
+        main>div:first-child {position: relative; margin-top: 60px;} /*맨 위 추천컬럼*/
+        main #column {width: 1205px; height: 405px;}
+        main #column a{height: 405px; display: flex; flex-direction: row; align-items: center; text-decoration: none; color: #1d1d1d; border-radius: 30px; box-shadow: 1px 3px 20px rgba(0, 0, 0, .1);}
+        main #column li:not(:first-child) {display: none;}
+        main #column li>a>img {width: 645px; height: 100%; text-indent: -9999px; overflow: hidden; border-radius: 30px 0 0 30px;}/*컬럼이미지*/
+        main #column li>a>div{width: 560px; height: 100%;  padding: 55px 50px; box-sizing: border-box;}
+        main #column li a p:nth-of-type(1) {font-size: 35px; font-weight: 700; font-family: 'Pretendard'; word-break: keep-all; line-height: 50px;} /*컬럼 제목*/
+        main #column li a p:nth-of-type(2) {font-size: 16px; font-weight: 400; font-family: 'Pretendard'; word-break: keep-all; line-height: 25px; margin-top: 20px;} /*컬럼 내용*/
+        main button:nth-of-type(1).column {width: 55px; height: 55px; position: absolute; text-indent: -9999px; overflow: hidden; background: url(img/left_btn.svg) center/cover no-repeat; border: none; border-radius: 50%; top: 45%; left: -30px; opacity: 0.7; box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3);}
+        main button:nth-of-type(2).column {width: 55px; height: 55px; position: absolute; text-indent: -9999px; overflow: hidden; background: url(img/right_btn.svg) center/cover no-repeat; border: none; border-radius: 50%; top: 45%; right: -30px; opacity: 0.7; box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3);}
+        /*최신기사&유튜브*/
+        main>div:nth-child(2) {display: flex; flex-direction: row; width: 1205px; align-items: flex-start; margin-top: 105px; justify-content: space-between;} 
+        /*최신기사 박스*/
+        main #new {display: flex; flex-direction: column; width: 1000px; margin-right: 70px;}
+        main #new::after {content: ""; border-right: 5px solid #e1e1e1; width: 10px; height: 100%;}
+        main #new h2 {font-size: 30px; text-align: center; margin-bottom: 45px;}
+        main #new ul {display: flex; flex-wrap: wrap; gap: 53px 35px; justify-content: space-between;}
+        main #new ul::after {content: ""; border-right: 1px solid #e1e1e1; width: 1px; height: 650px;  position: absolute; margin-left: 796px;}
+        /*최신기사 낱개*/
+        main #new li {width: 350px; height: 305px;}
+        main #new li a {width: 350px; text-decoration: none; color: #161616; font-size: 19px; font-weight: 600;}
+        main #new li a div {width: 100%; height: 226px; border-radius: 20px; margin-bottom: 20px; overflow: hidden;}
+        main #new li a img {width: 100%; height: 100%; transition: all 0.6s ease; filter: brightness(1);}
+        main #new li a:hover img {transform: scale(1.1); filter: brightness(0.5);}
+        /*YouTube 핫클립*/
+        main #youtube h2 {font-size: 30PX; text-align: center; margin-bottom: 45px;}
+        main #youtube a {text-decoration: none; color: #161616; font-size: 19px; font-weight: 600;}
+        main #youtube a div {width: 370px; height: 226px; border-radius: 20px; margin-bottom: 20px; overflow: hidden; position: relative;}
+        main #youtube a img {width: 100%; height: 100%; margin-bottom: 20px; transition: all 0.6s ease; filter: brightness(1);}
+        main #youtube a div::after {content: ""; width: 56px; height: 56px; display: block; position: absolute; top: 50%; right: 50%; background: url(img/youtube_icon_b.svg) center no-repeat; z-index: 30; margin: -28px -28px 0 0; opacity: 0.85;}
+        main #youtube a:hover img{transform: scale(1.1); filter: brightness(0.5);}
+        main #youtube>a p {width: 370px;}
+        /*디스플레이 톺아보기*/
+        main #youtube ul {margin-top: 63px; width: 100%;}
+        main #youtube ul li {width: calc(100% - 10px); height: 140px; background: url(img/banner_1_icon.png) no-repeat #f1f8fe; border-radius: 20px; padding-left: 35px; position: relative; background-position: 280px 10px;}
+        /*디스플레이 용어알기*/
+        main #youtube ul li:nth-child(2) {margin-top: 25px; background: url(img/banner_2_icon.png) no-repeat #e8f9ef; background-position: 280px 10px;}
+        main #youtube ul li a {height: 100%; text-decoration: none; display: flex; flex-direction: column; justify-content: center;}
+        main #youtube ul li a p:nth-child(1) {color: #3c7cfa; font-size: 13px; font-weight:700;}
+        main #youtube ul li a p:nth-child(2) {color: #1d1d1d; font-size: 14px; font-weight:400; margin: 20px 0 10px;}
+        main #youtube ul li a p:nth-child(3) {color: #1d1d1d; font-size: 22px; font-weight:700;}
+        main #youtube ul li a p:nth-child(3)::after {content: "\f054"; font-family: "FontAwesome"; font-size: 12px; padding-left: 10px; position: absolute; margin-top: 7px;}
+        /*인기기사*/
+        main>div:nth-child(3) {width: 100%; padding: 60px 80px; background: #F9F9F9; margin: 76px 0;}
+        main>div:nth-child(3) h2 {text-align: center; font-size: 30px;}
+        main>div:nth-child(3)>div {width: 1205px; position: relative; margin: auto;}
+        main #popular {display: flex; width: 1205px; gap: 30px; margin-top: 45px; margin-top: 45px;}
+        main #popular li {width: 380px; height: 458px; border-radius: 20px 20px 15px 15px; box-shadow: 0 6px 14px 0px rgba(0, 0, 0, .1);}
+        main #popular li:nth-child(n+4) {display: none;}
+        main #popular li a {display: block; height: 458px; text-decoration: none; color: #161616;}
+        main #popular li a:hover img {transform: scale(1.1); filter: brightness(0.5);}
+        /*인기기사 이미지 영역*/
+        main #popular li a div:first-child {width: 380px; height: 237px; border-radius: 20px 20px 0 0; overflow: hidden;}
+        main #popular li a img {width: 100%; height: 100%; border-radius: 20px 20px 0 0; transition: all 0.6s ease; filter: brightness(1);}
+        /*인기기사 텍스트 영역*/
+        main #popular li a div:nth-child(2) {height: 221px; padding: 30px 32px 40px; border-radius: 20px 20px 0 0; box-sizing: border-box;}
+        main #popular li a div:nth-child(2) p:nth-child(1) {height: 60px; font-size: 20px; font-weight: 600; line-height: 30px; word-break: keep-all;}
+        main #popular li a div:nth-child(2) p:nth-child(2) {width: 316px; height: fit-content; font-size: 16px; font-weight: 400; line-height: 26px; margin-top: 13px; white-space: normal; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;}
+        main button.popular:nth-of-type(1) {width: 55px; height: 55px; text-indent: -999px; overflow: hidden; background: url(img/left_btn.svg)center/cover no-repeat; border: none; border-radius: 50%; position: absolute; top: 45%; left: -30px; opacity: 0.7; box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3); z-index: 10;}
+        main button.popular:nth-of-type(2) {width: 55px; height: 55px; text-indent: -999px; overflow: hidden; background: url(img/right_btn.svg)center/cover no-repeat; border: none; border-radius: 50%; position: absolute;  top: 45%; right: -30px; opacity: 0.7; box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3); z-index: 10;}
+        /*연재 기사*/
+        main>div:nth-child(4) {display: flex; flex-direction: column; justify-content: center; position: relative;}
+        main>div:nth-child(4) h2 {text-align: center; font-size: 30px; font-weight: 700;}
+        main>div:nth-child(4)>p {text-align: center; font-size: 18px; font-weight: 400; margin-top: 29px;}
+        main #series {width: 1200px; display: flex; flex-direction: row; gap: 10px; overflow: hidden; justify-content: center; margin-top: 50px;}
+        main #series li {width: 224px; height: 364px;}
+        main #series li:nth-child(n+6) {display: none;}
+        main #series a {width: 100%; height: 100%; display: block; text-indent: -9999px; overflow: hidden; background: url(img/series_01.png) center/cover no-repeat;}
+        main #series li:nth-of-type(2) a {background-image: url(img/series_02.png);}
+        main #series li:nth-of-type(3) a {background-image: url(img/series_03.png);}
+        main #series li:nth-of-type(4) a {background-image: url(img/series_04.png);}
+        main #series li:nth-of-type(5) a {background-image: url(img/series_05.png);}
+        main div:nth-of-type(4) button:nth-of-type(1) {width: 55px; height: 55px; text-indent: -999px; overflow: hidden; background: url(img/left_btn.svg)center/cover no-repeat; border: none; border-radius: 50%; position: absolute; top: 55%; left: -10px; opacity: 0.7; box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3); z-index: 10;}
+        main div:nth-of-type(4) button:nth-of-type(2) {width: 55px; height: 55px; text-indent: -999px; overflow: hidden; background: url(img/right_btn.svg)center/cover no-repeat; border: none; border-radius: 50%; position: absolute;  top: 55%; right: -10px; opacity: 0.7; box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3); z-index: 10;}
+        /*뉴스룸 구독*/
+        main #subscribe {width: 1200px; height: 169px; background: url(img/newsletter_bg.svg); margin: 100px 0; position: relative; display: flex; align-items: center;}
+        main div:nth-of-type(5)::before {content: ""; background: url(img/letter_icon.svg); width: 77px; height: 81px; display: block; position: absolute; top: 35px; left: 70px;}
+        main #subscribe div {margin-left: 190px;}
+        main #subscribe p:nth-of-type(1) {font-size: 26px; font-weight: 700; margin-bottom: 12px;}
+        main #subscribe p:nth-of-type(2) {font-size: 16px; font-weight: 400;}
+        main #subscribe button {width: 158px; height: 50px; border-radius: 30px; background: #263070; font-family: 'Pretendard'; font-size: 18px; font-weight: 700; color: #fff; border: none; margin-left: 50px;}
+
+
+        footer {width: 100%; height: 270px; display: flex; flex-direction: row; justify-content: center; background-color: #1d1d1d; font-family: 'Pretendard';}
+        footer>div {width: 1300px; height: 100%; display: flex; flex-wrap: wrap; position: relative;}
+        footer #about {display: flex; margin-top: 60px; gap: 50px;}
+        footer #about li:first-child a {text-indent: -9999px; overflow: hidden; display: block; width: 190px; height: 20px; background: url(img/footer_logo.svg) center / 190px no-repeat; margin-right: 40px;}
+        footer #about li:not(:first-child) a{text-decoration: none; color: #fff; font-size: 18px; font-weight: 600;}
+        footer #about li button {font-family: 'Pretendard'; color: #fff; font-size: 18px; font-weight: 600; background-color: transparent; border: none;}
+        footer #link {display: flex; position: absolute; right: 0; margin-top: 52px;}
+        footer #link li a {display: flex; width: 50px; height: 50px; background: url(img/footer_home.svg) center no-repeat; text-decoration: none; color: #fff; align-items: center; justify-content: center;}
+        footer .link {display: none; position: relative;}
+        footer #link li a:hover .link {display: block; width: fit-content; background: #2E2E2E; font-size: 12px; font-weight: 500; margin: -10px auto; white-space: nowrap; border-radius: 3.5px; text-align: center; padding: 6px 8px; margin-bottom: 80px;}
+        footer #link li a:hover .link::after {content: ""; width: 16px; height: 13px; background: url(img/arrow_hover.svg) center no-repeat; position: absolute; top: 120%; left: 50%; transform: translate(-50%, -50%);}
+        footer #link li:nth-child(2) a {background-image: url(img/footer_fb.svg);}
+        footer #link li:nth-child(3) a {background-image: url(img/footer_yt.svg);}
+        footer #link li:nth-child(4) a {background-image: url(img/footer_insta.svg);}
+        footer #link li:nth-child(5) a {background-image: url(img/footer_lang.svg);}
+        footer>div>div {position: absolute; left: 0; bottom: 0; margin-bottom: 64px; color: #878587; font-weight: 400;}
+        footer>div>div address {font-style: normal;}
+        footer>div>div p:nth-child(2) {margin: 8px 0;}
+        footer>button {position: fixed; right: 50px; bottom: 50px; text-indent: -9999px; overflow: hidden; width: 50px; height: 50px; background: url(img/top_btn.svg) center/cover no-repeat; border: none;}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <a href="#">삼성 디스플레이 뉴스룸 홈</a>
+        </h1>
+        <nav>
+            <h2 class="screen_out">서비스 목록</h2>
+            <ul>
+                <li>
+                    <a href="#">제품기술</a>
+                    <ul class="sub_menu">
+                        <li class="sub_menu"><a href="#">D테크</a></li>
+                        <li class="sub_menu"><a href="#">D라이브러리</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">인사이트</a>
+                    <ul class="sub_menu">
+                        <li class="sub_menu"><a href="#">인사이드 마켓</a></li>
+                        <li class="sub_menu"><a href="#">테크 트렌드</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">ESG</a>
+                    <ul class="sub_menu">
+                        <li class="sub_menu"><a href="#">피플&컬쳐</a></li>
+                        <li class="sub_menu"><a href="#">지속가능경영</a></li>
+                        <li class="sub_menu"><a href="#">지속가능경영 보고서</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">기업</a>
+                    <ul class="sub_menu">
+                        <li class="sub_menu"><a href="#">회사소개</a></li>
+                        <li class="sub_menu"><a href="#">채용정보</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">프레스센터</a>
+                    <ul class="sub_menu">
+                        <li class="sub_menu"><a href="#">보도자료</a></li>
+                        <li class="sub_menu"><a href="#">알려드립니다</a></li>
+                        <li class="sub_menu"><a href="#">갤러리</a></li>
+                        <li class="sub_menu"><a href="#">뉴스레터</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div>
+            <button id="subscribe_btn">
+                <span class="text">뉴스룸 구독</span>
+                <span class="screen_out">하기</span>
+            </button>
+            <form action="#">
+                <fieldset>
+                    <legend>삼성디스플레이 뉴스룸 구독</legend>
+                    <p>관심 분야를 선택해 주세요</p>
+                    <input type="checkbox" id="field">
+                    <label for="field">전체선택</label>
+                    <ul>
+                        <li><label><input type="checkbox" name="field_radio">뉴스레터</label></li>
+                        <li><label><input type="checkbox" name="field_radio">제품기술</label></li>
+                        <li><label><input type="checkbox" name="field_radio">인사이트</label></li>
+                        <li><label><input type="checkbox" name="field_radio">ESG</label></li>
+                        <li><label><input type="checkbox" name="field_radio">채용정보</label></li>
+                    </ul>
+                    <input type="text" placeholder="이메일 주소를 입력해주세요.">
+                    <input type="checkbox" id="agree">
+                    <label for="agree">삼성디스플레이 뉴스룸 <a href="#">개인정보처리방침</a>에 동의합니다.</label>
+                    <button>구독하기</button>
+                    <button>구독하기 창 닫기</button>
+                </fieldset>
+            </form>
+            <h3 class="screen_out">소셜 네트워크 바로가기</h3>
+            <ul id="sns">
+                <li><a href="#">페이스북 바로가기</a></li>
+                <li><a href="#">유튜브 바로가기</a></li>
+                <li><a href="#">인스타그램 바로가기</a></li>
+                <li><a href="#">글로벌 뉴스룸 바로가기</a></li>
+            </ul>    
+            <button id="open_search">검색하기</button>
+            <button id="close_search">검색창 닫기</button>
+            <form action="#">
+                <fieldset>
+                    <legend class="screen_out">검색</legend>
+                    <input type="text" placeholder="검색어를 입력하세요">
+                    <button>검색</button>
+                    <p>검색기간</p>
+                    <ul>
+                        <li><label><input type="radio" name="search_term">전체</label></li>
+                        <li><label><input type="radio" name="search_term">최근 3개월</label></li>
+                        <li><label><input type="radio" name="search_term">최근 6개월</label></li>
+                        <li><label><input type="radio" name="search_term">최근 1년</label></li>
+                    </ul>
+                    <p>분류</p>
+                    <ul>
+                        <li><label><input type="radio" name="search_range">전체</label></li>
+                        <li><label><input type="radio" name="search_range">제품기술</label></li>
+                        <li><label><input type="radio" name="search_range">인사이트</label></li>
+                        <li><label><input type="radio" name="search_range">ESG</label></li>
+                        <li><label><input type="radio" name="search_range">기업</label></li>
+                        <li><label><input type="radio" name="search_range">프레스센터</label></li>
+                        <li><label><input type="radio" name="search_range">보도자료</label></li>
+                    </ul>
+                </fieldset>
+            </form>
+        </div>
+    </header>
+    <main>
+        <div> <!--추천컬럼-->
+            <h2 class="screen_out">추천 컬럼</h2>
+            <button class="column">이전 컬럼</button>
+            <button class="column">다음 컬럼</button>
+            <ul id="column">
+                <li>
+                    <a href="https://news.samsungdisplay.com/34108">
+                        <img src="img/column_01.jpg" alt="컬럼 이미지">
+                        <div>
+                            <p><span class="screen_out">컬럼 제목 : </span>[미술관에 간 과학자] 절규하는 하늘의 색</p>
+                            <p><span class="screen_out">컬럼 내용 : </span>노르웨이 기상학자들이 주목한 뭉크의 &lt;절규&gt;. 이들은 &lt;절규&gt; 속 하늘이 자개구름을 그린 것이라는 연구 결과를 발표했는데요. 뭉크의 &lt;절규&gt;에 담긴 과학 이야기부터 그의 기구한 일샘 스토리까지 들려 드립니다.</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://news.samsungdisplay.com/34103">
+                        <img src="img/column_02.jpg" alt="컬럼 이미지">
+                        <p>컬럼 제목 : 디스플레이를 선택하는 새로운 기준! 글로벌 표준이 된 삼성디스플레이의 체감휘도(XCR) 측정법</p>
+                        <p>컬럼 내용 : 디스플레이의 휘도가 같아도 색 종류와 채도에 따라 느껴지는 밝기가 다르다는 거 알고 계신가요? 그래서 삼성디스플레이가 고안한 새로운 밝기 측정법, '체감휘도'가 국제표준으로 채택되었다는 소식입니다!</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://news.samsungdisplay.com/34107">
+                        <img src="img/column_03.jpg" alt="컬럼 이미지">
+                        <p>컬럼 제목 : [REPLAY THE DISPLAY] VOL.32 엣지(Edge)로 스마트폰 디자인 UP! 그립감 UP! 진격의 삼성 플렉시블...</p>
+                        <p>컬럼 내용 : 2013년 세계 최초 곡면 디스플레이 스마트폰, '갤럭시 라운드'를 출시한 삼성! 이후에도 진화를 거듭하며 새로운 폼팩터, '엣지 OLED'를 선보였는데요. 플렉시블 디스플레이 시대를 열었던 그때로 들어가 봅니다.</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div> <!--최신기사&유튜브-->
+            <div id="new">
+                <h2>최신 기사</h2>
+                <ul>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34106">
+                            <div>
+                                <img src="img/new_article_01.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <p>[미술관에 간 과학자] 김홍도의 풍속화에 나타난 '입체이성질체'</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34105">
+                            <div>
+                                <img src="img/new_article_02.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <p>뉴스레터 Vol.134</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34104">
+                            <div>
+                                <img src="img/new_article_03.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <p>[오늘 이 전시 어때] 거리에 새겨진 시대정신 &lt;러브 인 파라다이스 뱅크시 & 키스 해링&gt; 展</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34102">
+                            <div>
+                                <img src="img/new_article_04.png" alt="기사 대표 이미지">
+                            </div>
+                            <p>삼성디스플레이의 '체감휘도 측정법', 글로벌 표준 채택</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="youtube">
+                <h2>Youtube 핫클립</h2>
+                <a href="https://www.youtube.com/watch?v=q_uUc0cMN38">
+                    <div>
+                        <img src="img/youtube.jpg" alt="유튜브 썸네일">
+                    </div>
+                    <p>[Collaboration Interview] Samsung OLED displays for the New MINI Family</p>
+                </a>
+                <h2 class="screen_out">추천 콘텐츠</h2>
+                <ul>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/textbook/" target="_blank">
+                            <p>D라이브러리</p>
+                            <p>디스플레이 기술을 알기 쉽게 설명한</p>
+                            <p>디스플레이 톺아보기</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/terms/" target="_blank">
+                            <p>D라이브러리</p>
+                            <p>디스플레이를 이해하는 중요한 방법!</p>
+                            <p>디스플레이 용어알기</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div> <!--인기 기사-->
+            <h2>인기 기사</h2>
+            <div>
+                <button class="popular">이전 기사</button>
+                <button class="popular">다음 기사</button>
+                <ul id="popular">
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34079">
+                            <div>
+                                <img src="img/article_01.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <div>
+                                <p>한눈에 보는 스마트폰 센서의 종류와 원리</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34101">
+                            <div>
+                                <img src="img/article_02.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <div>
+                                <p>[REPLAY THE DISPLAY] VOL.31 삼성디스플레이, 웨어러블 OLED 시대...</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34085">
+                            <div>
+                                <img src="img/article_03.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <div>
+                                <p>혁신 기술 뽐낸 'K-Display 2023' 삼성디스플레이 전시 부스 현장!</p>
+                                <p>지난 8월 16일, 국내 최대 디스플레이 전시화 'K-Display 2023'이 코엑스에서 열렸습니다. 3일간 진행되는 행사의 개막일에 방문해 전시 현장을 둘러봤습니다.</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34076">
+                            <div>
+                                <img src="img/article_04.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <div>
+                                <p>[REPLAY THE DISPLAY] VOL.29 플렉시블 OLED, 'YOUM'(윰)의 탄생</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34098">
+                            <div>
+                                <img src="img/article_05.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <div>
+                                <p>삼성디스플레이 2023년 하반기 3급 신입사원 채용</p>
+                                <p>삼성디스플레이가 2023년 하반기 3급 신입사원을 선발합니다. 최첨단 디스플레이를 개발하고, 디스플레이의 미래를 함께 펼쳐나갈 우수한 인재들의 도전을...</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://news.samsungdisplay.com/34097">
+                            <div>
+                                <img src="img/article_06.jpg" alt="기사 대표 이미지">
+                            </div>
+                            <div>
+                                <p>[IAA 모빌리티 2023] 삼성디스플레이가 선보인 차량...</p>
+                                <p>세계 4대 모터쇼 중 하나인 'IAA 모빌리티 2023(이하 IAA)'가 5일 (현지 시각) 독일 뮌헨에서 개막했습니다. 삼성디스플레이는 올해 처음으로 IAA에 참가하...</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div> <!--연재 기사-->
+            <h2>연재 기사</h2>
+            <p>삼성디스플레이만의 다양한 이야기를 시리즈로 보실 수 있습니다.</p>
+            <button>이전 기사</button>
+            <button>다음 기사</button>
+            <ul id="series">
+                <li><a href="https://news.samsungdisplay.com/category/102">한번에 이해가능한 SDC 지식재산권</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/101">사건파일 D텍티브</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/100">오늘 이 전시 어때</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/99">미술관에 간 과학자</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/95">요리조리 기술맛집</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/72">Replay the Display</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/73">어쩌다 통근버스</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/78">SDC 톡파원</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/79">D Shorts</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/87">직장인 브이로그</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/71">디스플레이 용어알기</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/70">디스플레이 톺아보기</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/80">YESG구</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/84">친절한 D맨</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/88">디톡쇼</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/82">SDC On The Stage</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/81">퀀텀닷 완전 정복</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/83">컬러 & 디스플레이</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/86">한 컷 일러스트</a></li>
+                <li><a href="https://news.samsungdisplay.com/category/85">일상 속 디스플레이의 발견</a></li>
+            </ul>
+        </div>
+        <div id="subscribe"> <!--뉴스룸 구독-->
+            <h2 class="screen_out">뉴스룸 구독 신청 안내</h2>
+            <div>
+                <p>삼성디스플레이 뉴스룸 구독</p>
+                <p>미래를 여는 새로운 창, 디스플레이 산업이 기술과 이슈, 세상과 함께하는 다양한 소식을 삼성디스플레이가 전해 드립니다.</p>
+            </div>
+            <button>구독 신청하기</button>
+        </div>
+    </main>
+    <footer>
+        <div>
+            <h2 class="screen_out">사이트 이용안내</h2>
+            <ul id="about">
+                <li><a href="https://www.samsungdisplay.com" target="_blank">삼성 디스플레이 홈</a></li>
+                <li><a href="https://news.samsungdisplay.com/privacy">개인정보처리방침</a></li>
+                <li><a href="https://news.samsungdisplay.com/rule">운영정책</a></li>
+                <li><button>뉴스룸 구독</button></li>
+            </ul>
+            <h3 class="screen_out">관련 사이트 바로가기</h3>
+            <ul id="link">
+                <li>
+                    <a href="https://www.samsungdisplay.com" target="_blank">
+                        <span class="link">삼성 디스플레이 홈페이지</span>
+                        <span class="screen_out">바로가기</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.facebook.com/SamsungDisplay" target="_blank">
+                        <span class="link">페이스북</span>
+                        <span class="screen_out">바로가기</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.youtube.com/user/SamsungDisplayMedia" target="_blank">
+                        <span class="link">유튜브</span>
+                        <span class="screen_out">바로가기</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.instagram.com/samsungdisplay_official" target="_blank">
+                        <span class="link">인스타그램</span>
+                        <span class="screen_out">바로가기</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://global.samsungdisplay.com/" target="_blank">
+                        <span class="link">글로벌 뉴스룸</span>
+                        <span class="screen_out">바로가기</span>
+                    </a>
+                </li>
+            </ul>
+            <div>
+                <address>본사 : 17113 경기도 용인시 기흥구 삼성로1</address>
+                <p>대표번호 : 031-5181-1114</p>
+                <p>Copyright &copy; 2022 SAMSUNG DISPLAY Co.,Ltd. All Rights Reserved.</p>
+            </div>
+        </div>
+        <button>맨 위로 이동</button>
+    </footer>
+</body>
+</html>
